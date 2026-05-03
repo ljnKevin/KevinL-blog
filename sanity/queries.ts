@@ -1,9 +1,9 @@
 import { groq } from 'next-sanity'
 
-import { getDate } from '~/lib/date'
-import { client } from '~/sanity/lib/client'
-import { type Post, type PostDetail } from '~/sanity/schemas/post'
-import { type Project } from '~/sanity/schemas/project'
+import { getDate } from '../lib/date'
+import { client } from './lib/client'
+import { type Post, type PostDetail } from './schemas/post'
+import { type Project } from './schemas/project'
 
 export const getAllLatestBlogPostSlugsQuery = () =>
   groq`

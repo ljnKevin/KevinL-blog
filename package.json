@@ -79,6 +79,7 @@
     "sanity": "^3.33.0",
     "sanity-plugin-markdown": "^4.1.1",
     "sanity-plugin-media": "^2.2.5",
+    "styled-components": "^5.2 || ^6",
     "valtio": "^1.13.2",
     "zod": "^3.22.4"
   },

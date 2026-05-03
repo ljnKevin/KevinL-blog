@@ -2,5 +2,15 @@
   "buildCommand": "pnpm turbo build",
   "github": {
     "silent": true
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/blog",
+      "destination": "https://exif-photo-blog-kevinls-projects.vercel.app"
+    },
+    {
+      "source": "/blog/:path*",
+      "destination": "https://exif-photo-blog-kevinls-projects.vercel.app/:path*"
+    }
+  ]
 }

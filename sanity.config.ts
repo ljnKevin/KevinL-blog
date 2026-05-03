@@ -7,11 +7,11 @@ import { visionTool } from '@sanity/vision'
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { media } from 'sanity-plugin-media'
-import { markdownSchema } from 'sanity-plugin-markdown';
-import { settingsPlugin, settingsStructure } from '~/sanity/plugins/settings'
+import { markdownSchema } from 'sanity-plugin-markdown'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import { apiVersion, dataset, projectId } from './sanity/env'
+import { settingsPlugin, settingsStructure } from './sanity/plugins/settings'
 import { schema } from './sanity/schema'
 import settingsType from './sanity/schemas/settings'
 

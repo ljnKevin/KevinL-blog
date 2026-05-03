@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity'
 
-import { FilterHorizontalIcon } from '~/assets'
+import { FilterHorizontalIcon } from '../../assets'
 
 export default defineType({
   name: 'settings',
