@@ -17,14 +17,19 @@ interface Node {
   children?: HeadingNode[]
 }
 
-const parseOutline = (nodes: Node[]) => {
+type OutlineItem = { style: string; text: string; id: string }
+
+const parseOutline = (nodes: Node[]): OutlineItem[] => {
+  if (!nodes || nodes.length === 0) {
+    return []
+  }
+
   return nodes
     .filter((node) => node._type === 'block' && node.style.startsWith('h'))
     .map((node) => {
       return {
         style: node.style,
-        text:
-          node.children?.[0] !== undefined ? node.children[0].text ?? '' : '',
+        text: node.children?.[0]?.text ?? '',
         id: node._key,
       }
     })
@@ -60,7 +65,7 @@ const itemVariants = {
 } satisfies Variants
 
 export function BlogPostTableOfContents({ headings }: { headings: Node[] }) {
-  const outline = parseOutline(headings)
+  const outline = React.useMemo(() => parseOutline(headings), [headings])
   const { scrollY } = useScroll()
   const [highlightedHeadingId, setHighlightedHeadingId] = React.useState<
     string | null
@@ -94,39 +99,51 @@ export function BlogPostTableOfContents({ headings }: { headings: Node[] }) {
       }
     }
 
-    window.addEventListener('scroll', handleScroll)
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [outline, scrollY])
 
+  if (outline.length === 0) {
+    return null
+  }
+
   return (
-    <motion.ul
-      initial="hidden"
-      animate="visible"
-      variants={listVariants}
-      className="group pointer-events-auto flex flex-col space-y-2 text-zinc-500"
-    >
-      {outline.map((node) => (
-        <motion.li
-          key={node.id}
-          variants={itemVariants}
-          className={clsxm(
-            'text-[12px] font-medium leading-[18px] transition-colors duration-300',
-            node.style === 'h3' && 'ml-1',
-            node.style === 'h4' && 'ml-2',
-            node.id === highlightedHeadingId
-              ? 'text-zinc-900 dark:text-zinc-200'
-              : 'hover:text-zinc-700 dark:hover:text-zinc-400 group-hover:[&:not(:hover)]:text-zinc-400 dark:group-hover:[&:not(:hover)]:text-zinc-600'
-          )}
-          aria-label={node.id === highlightedHeadingId ? '当前位置' : undefined}
-        >
-          <a href={`#${node.id}`} className="block w-full">
-            {node.text}
-          </a>
-        </motion.li>
-      ))}
-    </motion.ul>
+    <nav aria-label="文章目录" className="pointer-events-auto">
+      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+        Outline
+      </p>
+      <motion.ul
+        initial="hidden"
+        animate="visible"
+        variants={listVariants}
+        className="group flex flex-col gap-1 border-l border-zinc-900/10 pl-3 text-zinc-500 dark:border-white/10"
+      >
+        {outline.map((node) => (
+          <motion.li
+            key={node.id}
+            variants={itemVariants}
+            className={clsxm(
+              'text-[12px] font-medium leading-5 transition-colors duration-200',
+              node.style === 'h3' && 'pl-2',
+              node.style === 'h4' && 'pl-4',
+              node.id === highlightedHeadingId
+                ? 'text-zinc-900 dark:text-zinc-100'
+                : 'hover:text-emerald-700 dark:hover:text-emerald-300 group-hover:[&:not(:hover)]:text-zinc-400 dark:group-hover:[&:not(:hover)]:text-zinc-600'
+            )}
+            aria-label={
+              node.id === highlightedHeadingId ? '当前位置' : undefined
+            }
+          >
+            <a href={`#${node.id}`} className="block w-full py-1">
+              {node.text}
+            </a>
+          </motion.li>
+        ))}
+      </motion.ul>
+    </nav>
   )
 }

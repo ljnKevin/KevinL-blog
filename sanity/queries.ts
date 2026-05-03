@@ -82,6 +82,7 @@ export const getBlogPostQuery = groq`
       title,
       "slug": slug.current,
       "categories": categories[]->title,
+      description,
       publishedAt,
       readingTime,
       mainImage {

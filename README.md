@@ -1,4 +1,6 @@
-## 我的个人网站
+## KevinL Blog
+
+KevinL 的个人博客和作品集网站，包含博客文章、项目展示、留言墙、评论、Newsletter 和后台管理等功能。
 
 需要其他服务商的环境变量才能正常运行，所以如果你想要在本地运行，需要自己配置。
 
@@ -18,7 +20,6 @@
 - [Sanity](https://www.sanity.io/)
 - [React Email](https://react.email)
 - [Resend](https://resend.com/)
-
 
 ### 本地开发
 

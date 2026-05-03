@@ -59,7 +59,7 @@ export function BlogReactions({
 
   return (
     <motion.div
-      className="pointer-events-auto flex w-12 flex-col items-center justify-center gap-8 rounded-3xl bg-gradient-to-b from-zinc-100/80 to-white/90 px-1 pb-8 pt-4 ring-1 ring-zinc-400/10 backdrop-blur-lg dark:from-zinc-800/80 dark:to-zinc-950/80 dark:ring-zinc-500/10"
+      className="pointer-events-auto flex w-12 flex-col items-center justify-center gap-8 rounded-2xl border border-zinc-900/10 bg-white/80 px-1 pb-8 pt-4 backdrop-blur dark:border-white/10 dark:bg-zinc-900/70"
       onMouseMove={onMouseMove}
       onMouseLeave={() => mouseY.set(Infinity)}
       initial={{
@@ -82,9 +82,10 @@ export function BlogReactions({
     >
       {moodToReactions(mood).map((reaction, idx) => (
         <ReactIcon
-          key={idx}
+          key={reaction}
           y={mouseY}
           image={`/reactions/${reaction}.png`}
+          label={`添加 ${reaction} 反应`}
           count={cachedReactions[idx]}
           onClick={() => onClick(idx)}
         />
@@ -96,11 +97,13 @@ export function BlogReactions({
 function ReactIcon({
   y,
   image,
+  label,
   count = 0,
   onClick,
 }: {
   y: MotionValue
   image: string
+  label: string
   count?: number
   onClick?: () => void
 }) {
@@ -123,8 +126,9 @@ function ReactIcon({
     <motion.button
       ref={ref}
       type="button"
+      aria-label={label}
       style={{ height }}
-      className="relative aspect-square h-8"
+      className="relative aspect-square h-8 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/60"
       whileTap={{
         scale: 1.3,
       }}
@@ -139,7 +143,7 @@ function ReactIcon({
         fill
         unoptimized
       />
-      <span className="absolute -bottom-6 left-0 flex w-full items-center justify-center whitespace-nowrap text-[12px] font-semibold text-zinc-700/30 dark:text-zinc-200/25">
+      <span className="absolute -bottom-6 left-0 flex w-full items-center justify-center whitespace-nowrap text-[12px] font-semibold text-zinc-500/60 dark:text-zinc-400/50">
         {prettifyNumber(count, true)}
       </span>
     </motion.button>

@@ -24,19 +24,22 @@ export const metadata = {
 // TODO: add pagination or infinite scroll
 export default function BlogPage() {
   return (
-    <Container className="mt-16 sm:mt-24">
-      <header className="max-w-2xl">
-        <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+    <Container className="mt-14 sm:mt-20">
+      <header className="max-w-3xl border-b border-zinc-900/10 pb-10 dark:border-white/10">
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+          Blog
+        </p>
+        <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl">
           欢迎光临我的博客
         </h1>
-        <p className="my-6 text-base text-zinc-600 dark:text-zinc-400">
+        <p className="mt-6 max-w-2xl text-base leading-8 text-zinc-600 dark:text-zinc-400">
           <Balancer>{description}</Balancer>
         </p>
-        <p className="flex items-center">
+        <p className="mt-7 flex items-center">
           <SocialLink href="/feed.xml" platform="rss" />
         </p>
       </header>
-      <div className="mt-12 grid grid-cols-1 gap-6 sm:mt-20 lg:grid-cols-2 lg:gap-8">
+      <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-14 lg:grid-cols-2 lg:gap-6">
         <BlogPosts limit={20} />
       </div>
     </Container>
