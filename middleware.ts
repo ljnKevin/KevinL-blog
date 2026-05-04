@@ -54,9 +54,7 @@ async function beforeAuthMiddleware(req: NextRequest, evt: NextFetchEvent) {
       evt.waitUntil(
         redis
           .set(kvKeys.currentVisitor, { country, city, flag })
-          .catch((error) => {
-            console.error('Failed to update current visitor location', error)
-          })
+          .catch(() => undefined)
       )
     }
   }

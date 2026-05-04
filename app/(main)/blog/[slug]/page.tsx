@@ -60,7 +60,11 @@ export default async function BlogPage({
 
   let views: number
   if (env.VERCEL_ENV === 'production') {
-    views = await redis.incr(kvKeys.postViews(post._id))
+    try {
+      views = await redis.incr(kvKeys.postViews(post._id))
+    } catch {
+      views = 0
+    }
   } else {
     views = 30578
   }
@@ -82,8 +86,8 @@ export default async function BlogPage({
         Math.floor(Math.random() * 50000)
       )
     }
-  } catch (error) {
-    console.error(error)
+  } catch {
+    reactions = []
   }
 
   let relatedViews: number[] = []
@@ -92,7 +96,11 @@ export default async function BlogPage({
       relatedViews = post.related.map(() => Math.floor(Math.random() * 1000))
     } else {
       const postIdKeys = post.related.map(({ _id }) => kvKeys.postViews(_id))
-      relatedViews = await redis.mget<number[]>(...postIdKeys)
+      try {
+        relatedViews = await redis.mget<number[]>(...postIdKeys)
+      } catch {
+        relatedViews = []
+      }
     }
   }
 
