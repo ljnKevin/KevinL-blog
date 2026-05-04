@@ -1,6 +1,6 @@
 import { authMiddleware } from '@clerk/nextjs'
 import { get } from '@vercel/edge-config'
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextFetchEvent, type NextRequest, NextResponse } from 'next/server'
 
 import { kvKeys } from '~/config/kv'
 import { env } from '~/env.mjs'
@@ -12,12 +12,18 @@ export const config = {
   matcher: ['/((?!_next|studio|.*\\..*).*)'],
 }
 
-async function beforeAuthMiddleware(req: NextRequest) {
+async function beforeAuthMiddleware(req: NextRequest, evt: NextFetchEvent) {
   const { geo, nextUrl } = req
   const isApi = nextUrl.pathname.startsWith('/api/')
 
   if (process.env.EDGE_CONFIG) {
-    const blockedIPs = await get<string[]>('blocked_ips')
+    let blockedIPs: readonly string[] | undefined
+    try {
+      blockedIPs = await get<string[]>('blocked_ips')
+    } catch (error) {
+      console.error('Failed to read blocked IPs from Edge Config', error)
+    }
+
     const ip = getIP(req)
 
     if (blockedIPs?.includes(ip)) {
@@ -45,7 +51,13 @@ async function beforeAuthMiddleware(req: NextRequest) {
     const countryInfo = countries.find((x) => x.cca2 === country)
     if (countryInfo) {
       const flag = countryInfo.flag
-      await redis.set(kvKeys.currentVisitor, { country, city, flag })
+      evt.waitUntil(
+        redis
+          .set(kvKeys.currentVisitor, { country, city, flag })
+          .catch((error) => {
+            console.error('Failed to update current visitor location', error)
+          })
+      )
     }
   }
 
