@@ -54,6 +54,16 @@ const nextConfig = {
         "permanent": true
       },
       {
+        "source": "/photos",
+        "destination": "https://exif-photo-blog-kevinls-projects.vercel.app",
+        "permanent": false
+      },
+      {
+        "source": "/photos/:path*",
+        "destination": "https://exif-photo-blog-kevinls-projects.vercel.app/:path*",
+        "permanent": false
+      },
+      {
         "source": "/bilibili",
         "destination": "https://space.bilibili.com/8350251",
         "permanent": true

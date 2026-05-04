@@ -3,14 +3,16 @@
   "github": {
     "silent": true
   },
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/blog",
-      "destination": "https://exif-photo-blog-kevinls-projects.vercel.app"
+      "source": "/photos",
+      "destination": "https://exif-photo-blog-kevinls-projects.vercel.app",
+      "permanent": false
     },
     {
-      "source": "/blog/:path*",
-      "destination": "https://exif-photo-blog-kevinls-projects.vercel.app/:path*"
+      "source": "/photos/:path*",
+      "destination": "https://exif-photo-blog-kevinls-projects.vercel.app/:path*",
+      "permanent": false
     }
   ]
 }
