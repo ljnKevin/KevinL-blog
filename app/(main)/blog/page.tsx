@@ -1,6 +1,5 @@
 import Balancer from 'react-wrap-balancer'
 
-import { SocialLink } from '~/components/links/SocialLink'
 import { Container } from '~/components/ui/Container'
 
 import { BlogPosts } from './BlogPosts'
@@ -34,9 +33,6 @@ export default function BlogPage() {
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-8 text-zinc-600 dark:text-zinc-400">
           <Balancer>{description}</Balancer>
-        </p>
-        <p className="mt-7 flex items-center">
-          <SocialLink href="/feed.xml" platform="rss" />
         </p>
       </header>
       <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-14 lg:grid-cols-2 lg:gap-6">

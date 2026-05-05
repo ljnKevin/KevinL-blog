@@ -1,43 +1,12 @@
-import Link from 'next/link'
 import React from 'react'
 
 import { CursorClickIcon, UsersIcon } from '~/assets'
 import { PeekabooLink } from '~/components/links/PeekabooLink'
 import { Container } from '~/components/ui/Container'
 import { kvKeys } from '~/config/kv'
-import { navigationItems } from '~/config/nav'
 import { env } from '~/env.mjs'
 import { prettifyNumber } from '~/lib/math'
 import { redis } from '~/lib/redis'
-
-function NavLink({
-  href,
-  children,
-}: {
-  href: string
-  children: React.ReactNode
-}) {
-  return (
-    <Link
-      href={href}
-      className="transition hover:text-lime-500 dark:hover:text-lime-400"
-    >
-      {children}
-    </Link>
-  )
-}
-
-function Links() {
-  return (
-    <nav className="flex gap-6 text-sm font-medium text-zinc-800 dark:text-zinc-200">
-      {navigationItems.map(({ href, text }) => (
-        <NavLink key={href} href={href}>
-          {text}
-        </NavLink>
-      ))}
-    </nav>
-  )
-}
 
 async function TotalPageViews() {
   let views: number
@@ -116,7 +85,6 @@ export function Footer() {
                   GitHub
                 </PeekabooLink>
               </p>
-              <Links />
             </div>
           </Container.Inner>
           <Container.Inner className="mt-6">

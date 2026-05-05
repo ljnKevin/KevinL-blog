@@ -68,7 +68,7 @@ Do not use oversized marketing typography inside compact blog cards or sidebars.
 
 The blog index should behave like a reading archive, not a marketing grid.
 
-- Header: compact editorial introduction with RSS action.
+- Header: compact editorial introduction.
 - Add a subtle label such as "Blog" or "Writing" above the title.
 - Use a restrained two-column layout on large screens, single column on mobile.
 - Blog cards should use a clean split: thumbnail, title, description, metadata, categories.
