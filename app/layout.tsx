@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: seo.title,
   },
   description: seo.description,
-  keywords: 'KevinL',
+  keywords: ['KevinL', 'AI 应用开发', '产品型工程师', '个人项目', '技术博客'],
   manifest: '/site.webmanifest',
   robots: {
     index: true,
@@ -40,11 +40,9 @@ export const metadata: Metadata = {
     siteName: 'KevinL',
     locale: 'zh_CN',
     type: 'website',
-    url: 'https://cali.so',
+    url: seo.url,
   },
   twitter: {
-    site: '@thecalicastle',
-    creator: '@thecalicastle',
     card: 'summary_large_image',
     title: seo.title,
     description: seo.description,

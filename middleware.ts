@@ -1,6 +1,10 @@
 import { authMiddleware } from '@clerk/nextjs'
 import { get } from '@vercel/edge-config'
-import { type NextFetchEvent, type NextRequest, NextResponse } from 'next/server'
+import {
+  type NextFetchEvent,
+  type NextRequest,
+  NextResponse,
+} from 'next/server'
 
 import { kvKeys } from '~/config/kv'
 import { env } from '~/env.mjs'
@@ -72,6 +76,7 @@ export default authMiddleware({
     '/photos(.*)',
     '/confirm(.*)',
     '/projects',
+    '/media',
     '/guestbook',
     '/newsletters(.*)',
     '/about',

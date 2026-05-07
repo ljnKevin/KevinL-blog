@@ -14,7 +14,15 @@ export default async function sitemap() {
       lastModified: new Date(),
     },
     {
+      url: url('/about').href,
+      lastModified: new Date(),
+    },
+    {
       url: url('/projects').href,
+      lastModified: new Date(),
+    },
+    {
+      url: url('/media').href,
       lastModified: new Date(),
     },
     {
