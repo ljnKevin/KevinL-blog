@@ -6,13 +6,23 @@ import { Container } from '~/components/ui/Container'
 import { kvKeys } from '~/config/kv'
 import { env } from '~/env.mjs'
 import { prettifyNumber } from '~/lib/math'
+import { withTimeout } from '~/lib/promise'
 import { redis } from '~/lib/redis'
+
+const OPTIONAL_REDIS_TIMEOUT = 700
 
 async function TotalPageViews() {
   let views: number
   if (env.VERCEL_ENV === 'production') {
     try {
-      views = await redis.incr(kvKeys.totalPageViews)
+      const result = await withTimeout(
+        redis.incr(kvKeys.totalPageViews),
+        OPTIONAL_REDIS_TIMEOUT
+      )
+      if (typeof result !== 'number') {
+        return null
+      }
+      views = result
     } catch {
       return null
     }
@@ -40,13 +50,25 @@ async function LastVisitorInfo() {
   let lastVisitor: VisitorGeolocation | undefined = undefined
   if (env.VERCEL_ENV === 'production') {
     try {
-      const [lv, cv] = await redis.mget<(VisitorGeolocation | null)[]>(
-        kvKeys.lastVisitor,
-        kvKeys.currentVisitor
+      const visitors = await withTimeout(
+        redis.mget<(VisitorGeolocation | null)[]>(
+          kvKeys.lastVisitor,
+          kvKeys.currentVisitor
+        ),
+        OPTIONAL_REDIS_TIMEOUT
       )
+
+      if (!visitors) {
+        throw new Error('Visitor data timed out')
+      }
+
+      const [lv, cv] = visitors
       lastVisitor = lv ?? undefined
       if (cv) {
-        await redis.set(kvKeys.lastVisitor, cv)
+        void withTimeout(
+          redis.set(kvKeys.lastVisitor, cv),
+          OPTIONAL_REDIS_TIMEOUT
+        ).catch(() => undefined)
       }
     } catch {
       lastVisitor = undefined

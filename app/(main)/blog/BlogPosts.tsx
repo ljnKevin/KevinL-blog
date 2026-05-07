@@ -1,12 +1,15 @@
 import { kvKeys } from '~/config/kv'
 import { env } from '~/env.mjs'
+import { withTimeout } from '~/lib/promise'
 import { redis } from '~/lib/redis'
 import { getLatestBlogPosts } from '~/sanity/queries'
 
 import { BlogPostCard } from './BlogPostCard'
 
+const OPTIONAL_REDIS_TIMEOUT = 700
+
 export async function BlogPosts({ limit = 5 }) {
-  const posts = await getLatestBlogPosts({ limit, forDisplay: true }) || []
+  const posts = (await getLatestBlogPosts({ limit, forDisplay: true })) || []
   const postIdKeys = posts.map(({ _id }) => kvKeys.postViews(_id))
 
   let views: number[] = []
@@ -15,7 +18,11 @@ export async function BlogPosts({ limit = 5 }) {
   } else {
     if (postIdKeys.length > 0) {
       try {
-        views = await redis.mget<number[]>(...postIdKeys)
+        views =
+          (await withTimeout(
+            redis.mget<number[]>(...postIdKeys),
+            OPTIONAL_REDIS_TIMEOUT
+          )) ?? []
       } catch {
         views = []
       }

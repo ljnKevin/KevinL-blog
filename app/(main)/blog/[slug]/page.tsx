@@ -5,8 +5,11 @@ import { BlogPostPage } from '~/app/(main)/blog/BlogPostPage'
 import { kvKeys } from '~/config/kv'
 import { env } from '~/env.mjs'
 import { url } from '~/lib'
+import { withTimeout } from '~/lib/promise'
 import { redis } from '~/lib/redis'
 import { getBlogPost } from '~/sanity/queries'
+
+const OPTIONAL_REDIS_TIMEOUT = 700
 
 export const generateMetadata = async ({
   params,
@@ -59,7 +62,11 @@ export default async function BlogPage({
   let views: number
   if (env.VERCEL_ENV === 'production') {
     try {
-      views = await redis.incr(kvKeys.postViews(post._id))
+      views =
+        (await withTimeout(
+          redis.incr(kvKeys.postViews(post._id)),
+          OPTIONAL_REDIS_TIMEOUT
+        )) ?? 0
     } catch {
       views = 0
     }
@@ -70,14 +77,19 @@ export default async function BlogPage({
   let reactions: number[] = []
   try {
     if (env.VERCEL_ENV === 'production') {
-      const res = await fetch(url(`/api/reactions?id=${post._id}`), {
-        next: {
-          tags: [`reactions:${post._id}`],
-        },
-      })
-      const data = await res.json()
-      if (Array.isArray(data)) {
-        reactions = data
+      const res = await withTimeout(
+        fetch(url(`/api/reactions?id=${post._id}`), {
+          next: {
+            tags: [`reactions:${post._id}`],
+          },
+        }),
+        OPTIONAL_REDIS_TIMEOUT
+      )
+      if (res) {
+        const data = await res.json()
+        if (Array.isArray(data)) {
+          reactions = data
+        }
       }
     } else {
       reactions = Array.from({ length: 4 }, () =>
@@ -95,7 +107,11 @@ export default async function BlogPage({
     } else {
       const postIdKeys = post.related.map(({ _id }) => kvKeys.postViews(_id))
       try {
-        relatedViews = await redis.mget<number[]>(...postIdKeys)
+        relatedViews =
+          (await withTimeout(
+            redis.mget<number[]>(...postIdKeys),
+            OPTIONAL_REDIS_TIMEOUT
+          )) ?? []
       } catch {
         relatedViews = []
       }
