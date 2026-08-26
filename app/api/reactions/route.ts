@@ -40,7 +40,8 @@ export async function PATCH(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const id = searchParams.get('id')
   const index = searchParams.get('index')
-  if (!id || !index || !(parseInt(index) >= 0 && parseInt(index) < 4)) {
+  const reactionIndex = index ? parseInt(index) : -1
+  if (!id || !(reactionIndex >= 0 && reactionIndex < 4)) {
     return new Response('Missing id or index', { status: 400 })
   }
 
@@ -58,7 +59,7 @@ export async function PATCH(req: NextRequest) {
     current = [0, 0, 0, 0]
   }
   // increment the array value at the index
-  current[parseInt(index)] += 1
+  current[reactionIndex] = (current[reactionIndex] ?? 0) + 1
 
   await redis.set(key, current)
 

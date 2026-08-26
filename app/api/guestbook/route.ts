@@ -19,16 +19,21 @@ function getKey(id?: string) {
 
 export async function GET(req: NextRequest) {
   try {
-    const { success } = await ratelimit.limit(getKey(req.ip ?? ''))
-    if (!success) {
-      return new Response('Too Many Requests', {
-        status: 429,
-      })
+    try {
+      const { success } = await ratelimit.limit(getKey(req.ip ?? ''))
+      if (!success) {
+        return new Response('Too Many Requests', {
+          status: 429,
+        })
+      }
+    } catch (error) {
+      console.error('Failed to rate limit guestbook feed', error)
     }
 
     return NextResponse.json(await fetchGuestbookMessages())
   } catch (error) {
-    return NextResponse.json({ error }, { status: 400 })
+    console.error('Failed to fetch guestbook messages', error)
+    return NextResponse.json({ error: 'Failed to fetch guestbook messages' }, { status: 500 })
   }
 }
 

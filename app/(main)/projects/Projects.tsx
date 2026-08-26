@@ -68,16 +68,18 @@ export function Projects() {
               </div>
 
               <div className="mt-7 flex flex-wrap gap-4">
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 transition hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
-                >
-                  GitHub
-                  <ExternalLinkIcon className="h-4 w-4" />
-                </a>
-                <ProjectDemoLink href={project.demoUrl} />
+                {project.githubUrl ? (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 transition hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
+                  >
+                    GitHub
+                    <ExternalLinkIcon className="h-4 w-4" />
+                  </a>
+                ) : null}
+                {project.demoUrl && <ProjectDemoLink href={project.demoUrl} />}
               </div>
             </div>
 

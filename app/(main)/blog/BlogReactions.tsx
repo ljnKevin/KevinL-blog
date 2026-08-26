@@ -44,7 +44,7 @@ export function BlogReactions({
       // Optimistic update
       setCachedReactions((prev) => {
         const next = [...prev]
-        next[index]++
+        next[index] = (next[index] ?? 0) + 1
         return next
       })
 

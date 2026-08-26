@@ -70,7 +70,15 @@ export function GuestbookFeeds(props: { messages?: GuestbookDto[] }) {
     ['guestbook'],
     async () => {
       const res = await fetch('/api/guestbook')
-      const data = await res.json()
+      if (!res.ok) {
+        throw new Error('Failed to fetch guestbook messages')
+      }
+
+      const data: unknown = await res.json()
+      if (!Array.isArray(data)) {
+        throw new Error('Invalid guestbook messages response')
+      }
+
       return data as GuestbookDto[]
     },
     {
@@ -80,7 +88,7 @@ export function GuestbookFeeds(props: { messages?: GuestbookDto[] }) {
   )
   const { messages } = useSnapshot(guestbookState)
   React.useEffect(() => {
-    setMessages(feed ?? [])
+    setMessages(Array.isArray(feed) ? feed : [])
   }, [feed])
 
   return (

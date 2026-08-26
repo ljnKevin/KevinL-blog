@@ -68,7 +68,7 @@ export default function Layout({
                 </Link>{' '}
                 |&nbsp;
                 <Link
-                  href="mailto:ljnkevin1994@gmail.com"
+                  href="mailto:kevinl.seegen@gmail.com"
                   className="text-xs text-zinc-600 underline"
                 >
                   Email

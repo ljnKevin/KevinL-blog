@@ -70,7 +70,13 @@ export function Headline() {
             delay: 0.18,
           }}
         >
-          {['AI 应用开发', '产品工程', '前端与全栈', '内容表达'].map((item) => (
+          {[
+            'AI 应用开发',
+            '产品工程',
+            '前端与全栈',
+            '内容表达',
+            '长期跑步',
+          ].map((item) => (
             <span
               key={item}
               className="rounded-full border border-zinc-900/10 bg-white/70 px-3 py-1 dark:border-white/10 dark:bg-zinc-900/60"
@@ -95,7 +101,7 @@ export function Headline() {
             了解我
           </Button>
           <a
-            href="mailto:ljnkevin1994@gmail.com"
+            href="mailto:kevinl.seegen@gmail.com"
             className="inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-emerald-700 underline decoration-emerald-600/20 underline-offset-4 transition hover:decoration-emerald-600 dark:text-emerald-300"
           >
             联系我
@@ -120,7 +126,7 @@ export function Headline() {
             platform="github"
           />
           <SocialLink
-            href="mailto:ljnkevin1994@gmail.com"
+            href="mailto:kevinl.seegen@gmail.com"
             aria-label="我的邮箱"
             platform="mail"
           />
@@ -139,8 +145,8 @@ export function Headline() {
           {[
             ['方向', 'AI 应用开发 / 产品型工程师'],
             ['关注', '把想法做成可用产品'],
-            ['项目', '个人站与摄影影像站'],
-            ['联系', 'ljnkevin1994@gmail.com'],
+            ['生活', '跑步、摄影与持续写作'],
+            ['联系', 'kevinl.seegen@gmail.com'],
           ].map(([label, value]) => (
             <div key={label}>
               <dt className="text-xs text-zinc-500 dark:text-zinc-500">

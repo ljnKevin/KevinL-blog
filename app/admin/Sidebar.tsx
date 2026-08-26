@@ -9,6 +9,7 @@ import {
   DashboardIcon,
   HomeIcon,
   NewCommentIcon,
+  PencilSwooshIcon,
   SubscriberIcon,
   TiltedSendIcon,
 } from '~/assets'
@@ -20,6 +21,8 @@ const navigation = [
   { name: '评论', href: '/comments', icon: NewCommentIcon },
   { name: '订阅', href: '/subscribers', icon: SubscriberIcon },
   { name: 'Newsletters', href: '/newsletters', icon: TiltedSendIcon },
+  { name: '文章管理', href: '/studio', icon: PencilSwooshIcon, external: true },
+  { name: '照片后台', href: '/photos/admin', icon: PencilSwooshIcon, external: true },
 ]
 
 export function Sidebar() {
@@ -43,7 +46,7 @@ export function Sidebar() {
                   <li key={item.name}>
                     <Link
                       prefetch={false}
-                      href={`/admin${item.href}`}
+                      href={item.external ? item.href : `/admin${item.href}`}
                       className={clsxm(
                         isActive(item.href)
                           ? 'bg-gray-50 text-indigo-600 dark:bg-slate-800 dark:text-white'

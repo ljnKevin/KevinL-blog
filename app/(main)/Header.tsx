@@ -14,6 +14,7 @@ import {
   useMotionTemplate,
   useMotionValue,
 } from 'framer-motion'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
@@ -308,7 +309,8 @@ export function Header() {
 function UserInfo() {
   const [tooltipOpen, setTooltipOpen] = React.useState(false)
   const pathname = usePathname()
-  const { user } = useUser()
+  const { isSignedIn, user } = useUser()
+  const [isAdmin, setIsAdmin] = React.useState(false)
   const StrategyIcon = React.useMemo(() => {
     const strategy = user?.primaryEmailAddress?.verification.strategy
     if (!strategy) {
@@ -327,6 +329,32 @@ function UserInfo() {
     }
   }, [user?.primaryEmailAddress?.verification.strategy])
 
+  React.useEffect(() => {
+    if (!isSignedIn) {
+      setIsAdmin(false)
+      return
+    }
+
+    let ignore = false
+
+    fetch('/api/admin/me')
+      .then((res) => (res.ok ? res.json() : { isAdmin: false }))
+      .then((data: { isAdmin?: boolean }) => {
+        if (!ignore) {
+          setIsAdmin(data.isAdmin === true)
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setIsAdmin(false)
+        }
+      })
+
+    return () => {
+      ignore = true
+    }
+  }, [isSignedIn, user?.id])
+
   return (
     <AnimatePresence>
       <SignedIn key="user-info">
@@ -336,6 +364,14 @@ function UserInfo() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 25 }}
         >
+          {isAdmin ? (
+            <Link
+              href="/admin"
+              className="mr-3 rounded-full bg-emerald-400/15 px-3 py-1.5 text-sm font-semibold text-emerald-700 ring-1 ring-emerald-500/20 transition hover:bg-emerald-400/20 dark:text-emerald-300"
+            >
+              后台
+            </Link>
+          ) : null}
           <UserButton
             afterSignOutUrl={url(pathname).href}
             appearance={{

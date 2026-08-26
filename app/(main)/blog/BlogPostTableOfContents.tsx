@@ -4,13 +4,15 @@ import { clsxm } from '@zolplay/utils'
 import { motion, useScroll, type Variants } from 'framer-motion'
 import React from 'react'
 
+import { type MarkdownHeading } from '~/lib/markdown'
+
 interface HeadingNode {
   _type: 'span'
   text: string
   _key: string
 }
 
-interface Node {
+interface PortableTextHeadingNode {
   _type: 'block'
   style: 'h1' | 'h2' | 'h3' | 'h4'
   _key: string
@@ -18,15 +20,20 @@ interface Node {
 }
 
 type OutlineItem = { style: string; text: string; id: string }
+type HeadingInput = MarkdownHeading | PortableTextHeadingNode
 
-const parseOutline = (nodes: Node[]): OutlineItem[] => {
+const parseOutline = (nodes: HeadingInput[]): OutlineItem[] => {
   if (!nodes || nodes.length === 0) {
     return []
   }
 
   return nodes
-    .filter((node) => node._type === 'block' && node.style.startsWith('h'))
+    .filter((node) => node.style.startsWith('h'))
     .map((node) => {
+      if ('id' in node) {
+        return node
+      }
+
       return {
         style: node.style,
         text: node.children?.[0]?.text ?? '',
@@ -64,7 +71,11 @@ const itemVariants = {
   },
 } satisfies Variants
 
-export function BlogPostTableOfContents({ headings }: { headings: Node[] }) {
+export function BlogPostTableOfContents({
+  headings,
+}: {
+  headings: HeadingInput[]
+}) {
   const outline = React.useMemo(() => parseOutline(headings), [headings])
   const { scrollY } = useScroll()
   const [highlightedHeadingId, setHighlightedHeadingId] = React.useState<
@@ -77,8 +88,8 @@ export function BlogPostTableOfContents({ headings }: { headings: Node[] }) {
         'article[data-postid]'
       )
       const outlineYs = outline.map((node) => {
-        const el = document.querySelector<HTMLAnchorElement>(
-          `article ${node.style}:where([id="${node.id}"]) > a`
+        const el = document.querySelector<HTMLElement>(
+          `article ${node.style}:where([id="${node.id}"])`
         )
         if (!el) return 0
 

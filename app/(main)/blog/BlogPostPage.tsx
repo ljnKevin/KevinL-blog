@@ -17,10 +17,11 @@ import {
   UTurnLeftIcon,
 } from '~/assets'
 import { ClientOnly } from '~/components/ClientOnly'
-import { PostPortableText } from '~/components/PostPortableText'
+import { PostBody } from '~/components/PostBody'
 import { Prose } from '~/components/Prose'
 import { Button } from '~/components/ui/Button'
 import { Container } from '~/components/ui/Container'
+import { getMarkdownHeadings } from '~/lib/markdown'
 import { prettifyNumber } from '~/lib/math'
 import { type PostDetail } from '~/sanity/schemas/post'
 
@@ -41,13 +42,17 @@ export function BlogPostPage({
   const publishedDate = parseDateTime({
     date: new Date(post.publishedAt),
   })?.format('YYYY/MM/DD')
+  const headings =
+    typeof post.body === 'string'
+      ? getMarkdownHeadings(post.body)
+      : post.headings
 
   return (
     <Container className="mt-12 lg:mt-20">
       <div className="w-full items-start md:flex md:justify-between md:gap-8 xl:relative">
         <aside className="hidden w-[176px] shrink-0 lg:block">
           <div className="sticky top-4 pt-24">
-            <BlogPostTableOfContents headings={post.headings} />
+            <BlogPostTableOfContents headings={headings} />
           </div>
         </aside>
         <div className="max-w-3xl md:flex-1 md:shrink-0">
@@ -162,7 +167,7 @@ export function BlogPostPage({
               </motion.div>
             </header>
             <Prose className="mt-10">
-              <PostPortableText value={post.body} />
+              <PostBody value={post.body} />
             </Prose>
           </article>
         </div>

@@ -10,6 +10,7 @@ import {
 } from '~/assets'
 import { Button } from '~/components/ui/Button'
 import { Container } from '~/components/ui/Container'
+import { keepSportRecordUrl } from '~/config/profile'
 
 const title = '关于 KevinL'
 const description =
@@ -84,7 +85,7 @@ export default function AboutPage() {
             阅读文章
           </Button>
           <a
-            href="mailto:ljnkevin1994@gmail.com"
+            href="mailto:kevinl.seegen@gmail.com"
             className="inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-emerald-700 underline decoration-emerald-600/20 underline-offset-4 transition hover:decoration-emerald-600 dark:text-emerald-300"
           >
             联系我
@@ -108,6 +109,74 @@ export default function AboutPage() {
             </p>
           </article>
         ))}
+      </section>
+
+      <section
+        id="running"
+        className="mt-16 scroll-mt-10 border-y border-zinc-900/10 py-12 dark:border-white/10 sm:py-14"
+      >
+        <div className="grid gap-10 lg:grid-cols-[320px_minmax(0,1fr)]">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+              Running
+            </p>
+            <h2 className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              跑步是我和长期主义相处的方式。
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+              我喜欢它简单、诚实的反馈。状态有起伏，计划会被打乱，但仍然可以从当下重新找到节奏，继续向前。
+            </p>
+          </div>
+
+          <div>
+            <p className="max-w-2xl text-base leading-8 text-zinc-700 dark:text-zinc-300">
+              对我来说，跑步不只是体能训练。它给我一段不被消息打断的时间，也让我反复练习如何开始、如何调整，以及如何把一件事做得足够久。这种习惯也影响着我做产品：尊重真实反馈，不过度透支，为长期迭代留出空间。
+            </p>
+
+            <div className="mt-8 grid gap-6 sm:grid-cols-3">
+              {[
+                ['先开始', '不等所有条件完美，先完成今天能够完成的一步。'],
+                ['找节奏', '关注当下的真实状态，在目标和反馈之间持续调整。'],
+                ['做长期', '不把一次爆发当成答案，更看重能够重复的行动。'],
+              ].map(([title, description], index) => (
+                <article key={title} className="relative pt-6">
+                  <div className="absolute left-0 top-0 flex items-center">
+                    <span
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        index === 2
+                          ? 'bg-emerald-500 dark:bg-emerald-300'
+                          : 'bg-zinc-300 dark:bg-zinc-700'
+                      }`}
+                      aria-hidden="true"
+                    />
+                    {index < 2 ? (
+                      <span
+                        className="ml-2 hidden h-px w-24 bg-zinc-900/10 dark:bg-white/10 sm:block"
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                  </div>
+                  <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+                    {title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                    {description}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <a
+              href={keepSportRecordUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-7 inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-emerald-700 transition-colors hover:text-emerald-800 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 dark:text-emerald-300 dark:hover:text-emerald-200"
+            >
+              查看 Keep 运动数据
+              <ExternalLinkIcon className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
       </section>
 
       <section className="mt-16 grid gap-10 lg:grid-cols-[320px_minmax(0,1fr)]">
@@ -142,16 +211,16 @@ export default function AboutPage() {
       <section className="mt-16 rounded-3xl border border-zinc-900/10 bg-zinc-950 p-6 text-zinc-100 dark:border-white/10 sm:p-8">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
-            Public Proof
+            Project Proof
           </p>
           <h2 className="mt-3 text-2xl font-bold tracking-tight">
-            我会优先用公开项目和文章证明能力。
+            我会用项目和文章记录能力的形成过程。
           </h2>
           <p className="mt-4 text-sm leading-7 text-zinc-400">
-            目前最值得看的两个项目是这个个人站和独立照片站。它们分别代表我的产品化工程能力和长期表达方式。
+            目前最值得看的项目包括这个个人站、独立照片站和企业经营报表自动化系统。它们分别代表我的产品化工程能力、长期表达方式和业务自动化实践；私有案例只展示适合公开的信息。
           </p>
         </div>
-        <div className="mt-8 grid gap-4 lg:grid-cols-2">
+        <div className="mt-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {featuredProjects.map((project) => (
             <article
               key={project.name}
@@ -161,15 +230,17 @@ export default function AboutPage() {
               <p className="mt-2 text-sm leading-6 text-zinc-400">
                 {project.description}
               </p>
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-300 hover:text-emerald-200"
-              >
-                GitHub
-                <ExternalLinkIcon className="h-4 w-4" />
-              </a>
+              {project.githubUrl ? (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-300 hover:text-emerald-200"
+                >
+                  GitHub
+                  <ExternalLinkIcon className="h-4 w-4" />
+                </a>
+              ) : null}
             </article>
           ))}
         </div>

@@ -5,7 +5,6 @@ import { BlogPosts } from '~/app/(main)/blog/BlogPosts'
 import { Headline } from '~/app/(main)/Headline'
 import { featuredProjects } from '~/app/(main)/projects/project-data'
 import {
-  BriefcaseIcon,
   ExternalLinkIcon,
   Layers3Icon,
   LightningIcon,
@@ -14,6 +13,7 @@ import {
 } from '~/assets'
 import { Button } from '~/components/ui/Button'
 import { Container } from '~/components/ui/Container'
+import { keepSportRecordUrl } from '~/config/profile'
 
 const capabilities = [
   {
@@ -40,13 +40,6 @@ const capabilities = [
       '长期写作、拍照、做个人项目，重视信息表达、视觉秩序和长期复利。',
     icon: PencilSwooshIcon,
   },
-] as const
-
-const workSignals = [
-  ['定位', 'AI 应用开发者 / 产品型工程师'],
-  ['优势', '把产品判断、工程实现和内容表达连起来'],
-  ['偏好', '小步快跑、快速验证、持续打磨'],
-  ['联系', 'ljnkevin1994@gmail.com'],
 ] as const
 
 function SectionHeading({
@@ -83,12 +76,12 @@ export default function BlogHomePage() {
       </Container>
 
       <Container className="mt-20 sm:mt-24">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div>
           <section className="rounded-3xl border border-zinc-900/10 bg-white/70 p-6 shadow-sm shadow-zinc-800/5 dark:border-white/10 dark:bg-zinc-900/50 sm:p-8">
             <SectionHeading
               eyebrow="Capabilities"
-              title="招聘方可以先看这四件事。"
-              description="我更适合需要把新技术落到实际产品里的团队：既能写代码，也会关注需求、路径、表达和最终体验。"
+              title="我关注把想法推进到可用产品。"
+              description="围绕 AI 应用、产品判断、工程实现和内容表达，持续把新技术转化为清晰、稳定、可交付的体验。"
             />
             <div className="mt-8 grid gap-5 sm:grid-cols-2">
               {capabilities.map(({ title, description, icon: Icon }) => (
@@ -107,27 +100,6 @@ export default function BlogHomePage() {
               ))}
             </div>
           </section>
-
-          <aside className="rounded-3xl border border-zinc-900/10 bg-zinc-950 p-6 text-zinc-100 shadow-sm shadow-zinc-800/10 dark:border-white/10 dark:bg-zinc-950/70">
-            <BriefcaseIcon className="h-6 w-6 text-emerald-300" />
-            <h2 className="mt-5 text-lg font-bold">快速判断</h2>
-            <dl className="mt-5 space-y-4">
-              {workSignals.map(([label, value]) => (
-                <div key={label}>
-                  <dt className="text-xs text-zinc-500">{label}</dt>
-                  <dd className="mt-1 text-sm leading-6 text-zinc-200">
-                    {value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-            <Button
-              href="mailto:ljnkevin1994@gmail.com"
-              className="mt-6 w-full bg-emerald-400 text-zinc-950 hover:bg-emerald-300"
-            >
-              发邮件联系
-            </Button>
-          </aside>
         </div>
       </Container>
 
@@ -136,14 +108,14 @@ export default function BlogHomePage() {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <SectionHeading
               eyebrow="Featured Projects"
-              title="先看能证明我做事方式的项目。"
-              description="第一版先把两个最相关的公开项目放在最前面：主站本身，以及独立照片站。"
+              title="一些正在持续打磨的项目。"
+              description="这里收集我做过的个人网站、影像产品和 AI/自动化方向实践，记录从想法、设计到工程落地的过程。"
             />
             <Button href="/projects" variant="secondary" className="w-fit">
               查看全部项目
             </Button>
           </div>
-          <div className="grid gap-5 lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
             {featuredProjects.map((project) => (
               <article
                 key={project.name}
@@ -173,16 +145,18 @@ export default function BlogHomePage() {
                   ))}
                 </div>
                 <div className="mt-6 flex flex-wrap gap-3 text-sm font-semibold">
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="inline-flex items-center gap-1.5 text-emerald-700 transition hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
-                  >
-                    GitHub
-                    <ExternalLinkIcon className="h-4 w-4" />
-                  </a>
-                  {project.demoUrl.startsWith('http') ? (
+                  {project.githubUrl ? (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="inline-flex items-center gap-1.5 text-emerald-700 transition hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
+                    >
+                      GitHub
+                      <ExternalLinkIcon className="h-4 w-4" />
+                    </a>
+                  ) : null}
+                  {project.demoUrl?.startsWith('http') ? (
                     <a
                       href={project.demoUrl}
                       target="_blank"
@@ -192,7 +166,7 @@ export default function BlogHomePage() {
                       访问作品
                       <ExternalLinkIcon className="h-4 w-4" />
                     </a>
-                  ) : (
+                  ) : project.demoUrl ? (
                     <Link
                       href={project.demoUrl}
                       className="inline-flex items-center gap-1.5 text-zinc-700 transition hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-50"
@@ -200,12 +174,77 @@ export default function BlogHomePage() {
                       访问作品
                       <ExternalLinkIcon className="h-4 w-4" />
                     </Link>
-                  )}
+                  ) : null}
                 </div>
               </article>
             ))}
           </div>
         </div>
+      </Container>
+
+      <Container className="mt-20 sm:mt-24">
+        <section className="overflow-hidden rounded-3xl bg-zinc-950 text-zinc-100 ring-1 ring-zinc-900/10 dark:ring-white/10">
+          <div className="grid lg:grid-cols-[minmax(0,1fr)_360px]">
+            <div className="p-6 sm:p-8 lg:p-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
+                Running
+              </p>
+              <h2 className="mt-3 max-w-xl text-2xl font-bold tracking-tight sm:text-3xl">
+                跑步让我相信，稳定的节奏比短暂的冲刺更可靠。
+              </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-400 sm:text-base sm:leading-8">
+                它是运动，也是整理思绪的时间。一次次出发、感受状态、调整节奏，让我更习惯用长期视角面对生活和工作。
+              </p>
+              <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2">
+                <a
+                  href={keepSportRecordUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-emerald-300 transition-colors hover:text-emerald-200 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                >
+                  查看 Keep 运动数据
+                  <ExternalLinkIcon className="h-4 w-4" />
+                </a>
+                <Link
+                  href="/about#running"
+                  className="inline-flex min-h-10 items-center text-sm font-semibold text-zinc-300 transition-colors hover:text-white focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
+                >
+                  了解跑步对我的影响
+                </Link>
+              </div>
+            </div>
+
+            <div className="border-t border-white/10 bg-white/[0.03] p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">
+                Keep moving
+              </p>
+              <ol className="relative mt-7 space-y-7 before:absolute before:bottom-3 before:left-[5px] before:top-3 before:w-px before:bg-white/10">
+                {[
+                  ['出发', '先迈出第一步'],
+                  ['调整', '根据真实反馈找到节奏'],
+                  ['继续', '把一次行动变成长期习惯'],
+                ].map(([title, description], index) => (
+                  <li key={title} className="relative flex gap-5">
+                    <span
+                      className={`relative z-10 mt-1.5 h-[11px] w-[11px] flex-none rounded-full ring-4 ring-zinc-950 ${
+                        index === 2 ? 'bg-emerald-300' : 'bg-zinc-600'
+                      }`}
+                      aria-hidden="true"
+                    />
+                    <div>
+                      <h3 className="text-sm font-semibold text-zinc-100">
+                        {title}
+                      </h3>
+                      <p className="mt-1 text-sm leading-6 text-zinc-500">
+                        {description}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
       </Container>
 
       <Container className="mt-20 sm:mt-24">
@@ -224,10 +263,10 @@ export default function BlogHomePage() {
               Beyond Code
             </p>
             <h2 className="mt-3 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-              生活影像也是个人表达的一部分。
+              影像记录我如何观察生活。
             </h2>
             <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-              照片放在独立照片站，视频先用抖音入口承接。这里不喧宾夺主，只作为招聘方理解我的审美和表达方式的补充。
+              照片放在独立照片站，视频先用抖音入口承接。它们和跑步一起，构成工作之外真实、持续的生活。
             </p>
             <div className="mt-6 flex flex-col gap-3 text-sm font-semibold">
               <Link
