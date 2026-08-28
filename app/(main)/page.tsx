@@ -13,7 +13,12 @@ import {
 } from '~/assets'
 import { Button } from '~/components/ui/Button'
 import { Container } from '~/components/ui/Container'
-import { keepSportRecordUrl } from '~/config/profile'
+import {
+  favoriteApps,
+  keepSportRecordUrl,
+  spotifyPlaylistEmbedUrl,
+  spotifyPlaylistUrl,
+} from '~/config/profile'
 
 const capabilities = [
   {
@@ -41,6 +46,12 @@ const capabilities = [
     icon: PencilSwooshIcon,
   },
 ] as const
+
+const appToneClasses = {
+  violet:
+    'bg-violet-100 text-violet-800 dark:bg-violet-400/15 dark:text-violet-200',
+  rose: 'bg-rose-100 text-rose-800 dark:bg-rose-400/15 dark:text-rose-200',
+} as const
 
 function SectionHeading({
   eyebrow,
@@ -243,6 +254,91 @@ export default function BlogHomePage() {
                 ))}
               </ol>
             </div>
+          </div>
+        </section>
+      </Container>
+
+      <Container className="mt-20 sm:mt-24">
+        <section className="border-y border-zinc-900/10 py-12 dark:border-white/10 sm:py-14">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:gap-14">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+                Soundtrack
+              </p>
+              <div className="mt-3 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+                <div>
+                  <h2 className="max-w-xl text-balance text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
+                    音乐帮我找到进入状态的节奏。
+                  </h2>
+                  <p className="mt-4 max-w-2xl text-pretty text-base leading-8 text-zinc-600 dark:text-zinc-400">
+                    跑步时让身体继续向前，工作时把外界噪音留在身后。这份歌单是我最近愿意反复播放的声音。
+                  </p>
+                </div>
+                <a
+                  href={spotifyPlaylistUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex min-h-10 flex-none items-center gap-2 text-sm font-semibold text-emerald-700 transition-colors hover:text-emerald-800 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 dark:text-emerald-300 dark:hover:text-emerald-200"
+                >
+                  在 Spotify 打开
+                  <ExternalLinkIcon className="h-4 w-4" />
+                </a>
+              </div>
+
+              <div className="mt-7 overflow-hidden rounded-2xl bg-zinc-950 shadow-[0_14px_36px_rgba(9,9,11,0.18)] ring-1 ring-zinc-950/10 dark:ring-white/10">
+                <iframe
+                  title="KevinL 的 Spotify 歌单"
+                  src={spotifyPlaylistEmbedUrl}
+                  width="100%"
+                  height="352"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="block w-full"
+                />
+              </div>
+            </div>
+
+            <aside>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+                Daily tools
+              </p>
+              <h2 className="mt-3 text-balance text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+                我喜欢的 App，也透露了我如何生活和工作。
+              </h2>
+              <p className="mt-4 text-pretty text-base leading-8 text-zinc-600 dark:text-zinc-400">
+                我偏爱目标清楚、反馈直接，能减少摩擦、让思路和行动保持连贯的工具。
+              </p>
+
+              <ul className="mt-7 divide-y divide-zinc-900/10 dark:divide-white/10">
+                {favoriteApps.map((app) => (
+                  <li
+                    key={app.name}
+                    className="group flex gap-4 py-4 first:pt-0 last:pb-0"
+                  >
+                    <span
+                      className={`flex h-10 w-10 flex-none items-center justify-center rounded-xl text-[11px] font-bold tracking-[0.08em] transition-transform duration-200 ease-out motion-reduce:transition-none [@media(hover:hover)]:group-hover:-translate-y-0.5 ${appToneClasses[app.tone]}`}
+                      aria-hidden="true"
+                    >
+                      {app.shortName}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+                          {app.name}
+                        </h3>
+                        <span className="text-xs text-zinc-500 dark:text-zinc-500">
+                          {app.category}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-pretty text-base leading-7 text-zinc-600 dark:text-zinc-400">
+                        {app.description}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </aside>
           </div>
         </section>
       </Container>
