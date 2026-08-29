@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
@@ -19,38 +20,18 @@ import {
   spotifyPlaylistEmbedUrl,
   spotifyPlaylistUrl,
 } from '~/config/profile'
+import { siteContent } from '~/content/site-content'
 
-const capabilities = [
-  {
-    title: 'AI 应用开发',
-    description:
-      '关注从想法到可用产品的完整链路，能把 AI 能力包装成明确、稳定、可交付的用户体验。',
-    icon: LightningIcon,
-  },
-  {
-    title: '产品工程思维',
-    description:
-      '不只实现功能，也会拆解目标用户、使用场景、信息架构和迭代优先级。',
-    icon: SparkleIcon,
-  },
-  {
-    title: '前端与全栈实现',
-    description:
-      '熟悉 Next.js、TypeScript、内容系统、数据库、登录、邮件、部署等产品化基础设施。',
-    icon: Layers3Icon,
-  },
-  {
-    title: '内容表达与审美',
-    description:
-      '长期写作、拍照、做个人项目，重视信息表达、视觉秩序和长期复利。',
-    icon: PencilSwooshIcon,
-  },
-] as const
+const capabilityIcons = {
+  lightning: LightningIcon,
+  sparkle: SparkleIcon,
+  layers: Layers3Icon,
+  pencil: PencilSwooshIcon,
+} as const
 
-const appToneClasses = {
-  violet:
-    'bg-violet-100 text-violet-800 dark:bg-violet-400/15 dark:text-violet-200',
-  rose: 'bg-rose-100 text-rose-800 dark:bg-rose-400/15 dark:text-rose-200',
+const appIconClasses = {
+  linear: 'bg-[#222326]',
+  raycast: 'bg-[#151515]',
 } as const
 
 function SectionHeading({
@@ -80,6 +61,8 @@ function SectionHeading({
 }
 
 export default function BlogHomePage() {
+  const { home } = siteContent
+
   return (
     <>
       <Container className="mt-10">
@@ -90,25 +73,29 @@ export default function BlogHomePage() {
         <div>
           <section className="rounded-3xl border border-zinc-900/10 bg-white/70 p-6 shadow-sm shadow-zinc-800/5 dark:border-white/10 dark:bg-zinc-900/50 sm:p-8">
             <SectionHeading
-              eyebrow="Capabilities"
-              title="我关注把想法推进到可用产品。"
-              description="围绕 AI 应用、产品判断、工程实现和内容表达，持续把新技术转化为清晰、稳定、可交付的体验。"
+              eyebrow={home.capabilities.eyebrow}
+              title={home.capabilities.title}
+              description={home.capabilities.description}
             />
             <div className="mt-8 grid gap-5 sm:grid-cols-2">
-              {capabilities.map(({ title, description, icon: Icon }) => (
-                <div
-                  key={title}
-                  className="rounded-2xl border border-zinc-900/10 bg-zinc-50/70 p-5 dark:border-white/10 dark:bg-zinc-800/35"
-                >
-                  <Icon className="h-5 w-5 text-emerald-700 dark:text-emerald-300" />
-                  <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-zinc-100">
-                    {title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                    {description}
-                  </p>
-                </div>
-              ))}
+              {home.capabilities.items.map(({ title, description, icon }) => {
+                const Icon = capabilityIcons[icon]
+
+                return (
+                  <div
+                    key={title}
+                    className="rounded-2xl border border-zinc-900/10 bg-zinc-50/70 p-5 dark:border-white/10 dark:bg-zinc-800/35"
+                  >
+                    <Icon className="h-5 w-5 text-emerald-700 dark:text-emerald-300" />
+                    <h3 className="mt-4 text-base font-bold text-zinc-900 dark:text-zinc-100">
+                      {title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                      {description}
+                    </p>
+                  </div>
+                )
+              })}
             </div>
           </section>
         </div>
@@ -118,12 +105,12 @@ export default function BlogHomePage() {
         <div className="flex flex-col gap-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <SectionHeading
-              eyebrow="Featured Projects"
-              title="一些正在持续打磨的项目。"
-              description="这里收集我做过的个人网站、影像产品和 AI/自动化方向实践，记录从想法、设计到工程落地的过程。"
+              eyebrow={home.featuredProjects.eyebrow}
+              title={home.featuredProjects.title}
+              description={home.featuredProjects.description}
             />
             <Button href="/projects" variant="secondary" className="w-fit">
-              查看全部项目
+              {home.featuredProjects.viewAllLabel}
             </Button>
           </div>
           <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
@@ -163,7 +150,7 @@ export default function BlogHomePage() {
                       rel="noreferrer noopener"
                       className="inline-flex items-center gap-1.5 text-emerald-700 transition hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
                     >
-                      GitHub
+                      {home.featuredProjects.githubLabel}
                       <ExternalLinkIcon className="h-4 w-4" />
                     </a>
                   ) : null}
@@ -174,7 +161,7 @@ export default function BlogHomePage() {
                       rel="noreferrer noopener"
                       className="inline-flex items-center gap-1.5 text-zinc-700 transition hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-50"
                     >
-                      访问作品
+                      {home.featuredProjects.visitLabel}
                       <ExternalLinkIcon className="h-4 w-4" />
                     </a>
                   ) : project.demoUrl ? (
@@ -182,7 +169,7 @@ export default function BlogHomePage() {
                       href={project.demoUrl}
                       className="inline-flex items-center gap-1.5 text-zinc-700 transition hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-50"
                     >
-                      访问作品
+                      {home.featuredProjects.visitLabel}
                       <ExternalLinkIcon className="h-4 w-4" />
                     </Link>
                   ) : null}
@@ -198,13 +185,13 @@ export default function BlogHomePage() {
           <div className="grid lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="p-6 sm:p-8 lg:p-10">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
-                Running
+                {home.running.eyebrow}
               </p>
               <h2 className="mt-3 max-w-xl text-2xl font-bold tracking-tight sm:text-3xl">
-                跑步让我相信，稳定的节奏比短暂的冲刺更可靠。
+                {home.running.title}
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-400 sm:text-base sm:leading-8">
-                它是运动，也是整理思绪的时间。一次次出发、感受状态、调整节奏，让我更习惯用长期视角面对生活和工作。
+                {home.running.description}
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2">
                 <a
@@ -213,28 +200,24 @@ export default function BlogHomePage() {
                   rel="noreferrer noopener"
                   className="inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-emerald-300 transition-colors hover:text-emerald-200 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
                 >
-                  查看 Keep 运动数据
+                  {home.running.keepLabel}
                   <ExternalLinkIcon className="h-4 w-4" />
                 </a>
                 <Link
                   href="/about#running"
                   className="inline-flex min-h-10 items-center text-sm font-semibold text-zinc-300 transition-colors hover:text-white focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
                 >
-                  了解跑步对我的影响
+                  {home.running.aboutLabel}
                 </Link>
               </div>
             </div>
 
             <div className="border-t border-white/10 bg-white/[0.03] p-6 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500">
-                Keep moving
+                {home.running.timelineEyebrow}
               </p>
               <ol className="relative mt-7 space-y-7 before:absolute before:bottom-3 before:left-[5px] before:top-3 before:w-px before:bg-white/10">
-                {[
-                  ['出发', '先迈出第一步'],
-                  ['调整', '根据真实反馈找到节奏'],
-                  ['继续', '把一次行动变成长期习惯'],
-                ].map(([title, description], index) => (
+                {home.running.steps.map(([title, description], index) => (
                   <li key={title} className="relative flex gap-5">
                     <span
                       className={`relative z-10 mt-1.5 h-[11px] w-[11px] flex-none rounded-full ring-4 ring-zinc-950 ${
@@ -263,15 +246,15 @@ export default function BlogHomePage() {
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:gap-14">
             <div className="min-w-0">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
-                Soundtrack
+                {home.soundtrack.eyebrow}
               </p>
               <div className="mt-3 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                 <div>
                   <h2 className="max-w-xl text-balance text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
-                    音乐帮我找到进入状态的节奏。
+                    {home.soundtrack.title}
                   </h2>
                   <p className="mt-4 max-w-2xl text-pretty text-base leading-8 text-zinc-600 dark:text-zinc-400">
-                    跑步时让身体继续向前，工作时把外界噪音留在身后。这份歌单是我最近愿意反复播放的声音。
+                    {home.soundtrack.description}
                   </p>
                 </div>
                 <a
@@ -280,14 +263,14 @@ export default function BlogHomePage() {
                   rel="noreferrer noopener"
                   className="inline-flex min-h-10 flex-none items-center gap-2 text-sm font-semibold text-emerald-700 transition-colors hover:text-emerald-800 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 dark:text-emerald-300 dark:hover:text-emerald-200"
                 >
-                  在 Spotify 打开
+                  {home.soundtrack.openLabel}
                   <ExternalLinkIcon className="h-4 w-4" />
                 </a>
               </div>
 
               <div className="mt-7 overflow-hidden rounded-2xl bg-zinc-950 shadow-[0_14px_36px_rgba(9,9,11,0.18)] ring-1 ring-zinc-950/10 dark:ring-white/10">
                 <iframe
-                  title="KevinL 的 Spotify 歌单"
+                  title={home.soundtrack.iframeTitle}
                   src={spotifyPlaylistEmbedUrl}
                   width="100%"
                   height="352"
@@ -301,13 +284,13 @@ export default function BlogHomePage() {
 
             <aside>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
-                Daily tools
+                {home.tools.eyebrow}
               </p>
               <h2 className="mt-3 text-balance text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-                我喜欢的 App，也透露了我如何生活和工作。
+                {home.tools.title}
               </h2>
               <p className="mt-4 text-pretty text-base leading-8 text-zinc-600 dark:text-zinc-400">
-                我偏爱目标清楚、反馈直接，能减少摩擦、让思路和行动保持连贯的工具。
+                {home.tools.description}
               </p>
 
               <ul className="mt-7 divide-y divide-zinc-900/10 dark:divide-white/10">
@@ -317,10 +300,17 @@ export default function BlogHomePage() {
                     className="group flex gap-4 py-4 first:pt-0 last:pb-0"
                   >
                     <span
-                      className={`flex h-10 w-10 flex-none items-center justify-center rounded-xl text-[11px] font-bold tracking-[0.08em] transition-transform duration-200 ease-out motion-reduce:transition-none [@media(hover:hover)]:group-hover:-translate-y-0.5 ${appToneClasses[app.tone]}`}
+                      className={`flex h-10 w-10 flex-none items-center justify-center rounded-xl p-2 shadow-sm ring-1 ring-white/10 transition-transform duration-200 ease-out motion-reduce:transition-none [@media(hover:hover)]:group-hover:-translate-y-0.5 ${appIconClasses[app.iconStyle]}`}
                       aria-hidden="true"
                     >
-                      {app.shortName}
+                      <Image
+                        src={app.icon}
+                        alt=""
+                        width={24}
+                        height={24}
+                        unoptimized
+                        className="h-6 w-6"
+                      />
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline justify-between gap-3">
@@ -348,7 +338,7 @@ export default function BlogHomePage() {
           <section>
             <h2 className="flex items-center text-sm font-semibold text-zinc-900 dark:text-zinc-100">
               <PencilSwooshIcon className="h-5 w-5 flex-none" />
-              <span className="ml-2">近期文章：看长期思考和技术沉淀</span>
+              <span className="ml-2">{home.recentArticlesTitle}</span>
             </h2>
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
               <BlogPosts limit={4} />
@@ -356,29 +346,29 @@ export default function BlogHomePage() {
           </section>
           <aside className="h-fit rounded-3xl border border-zinc-900/10 bg-white/70 p-6 dark:border-white/10 dark:bg-zinc-900/50 lg:sticky lg:top-8">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
-              Beyond Code
+              {home.beyondCode.eyebrow}
             </p>
             <h2 className="mt-3 text-lg font-bold text-zinc-900 dark:text-zinc-100">
-              影像记录我如何观察生活。
+              {home.beyondCode.title}
             </h2>
             <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-              照片放在独立照片站，视频先用抖音入口承接。它们和跑步一起，构成工作之外真实、持续的生活。
+              {home.beyondCode.description}
             </p>
             <div className="mt-6 flex flex-col gap-3 text-sm font-semibold">
               <Link
                 href="/media"
                 className="inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
               >
-                查看影像入口
+                {home.beyondCode.mediaLabel}
                 <ExternalLinkIcon className="h-4 w-4" />
               </Link>
               <a
-                href="https://kevinl.me/photos"
+                href={siteContent.links.photosUrl}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="inline-flex items-center gap-2 text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-50"
               >
-                直接访问照片站
+                {home.beyondCode.photosLabel}
                 <ExternalLinkIcon className="h-4 w-4" />
               </a>
             </div>

@@ -4,6 +4,7 @@ import { CursorClickIcon, UsersIcon } from '~/assets'
 import { PeekabooLink } from '~/components/links/PeekabooLink'
 import { Container } from '~/components/ui/Container'
 import { kvKeys } from '~/config/kv'
+import { siteContent } from '~/content/site-content'
 import { env } from '~/env.mjs'
 import { prettifyNumber } from '~/lib/math'
 import { withTimeout } from '~/lib/promise'
@@ -33,8 +34,10 @@ async function TotalPageViews() {
   return (
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
       <UsersIcon className="h-4 w-4" />
-      <span title={`${Intl.NumberFormat('en-US').format(views)}次浏览`}>
-        总浏览量&nbsp;
+      <span
+        title={`${Intl.NumberFormat('en-US').format(views)}${siteContent.footer.viewsCountSuffix}`}
+      >
+        {siteContent.footer.totalViewsLabel}&nbsp;
         <span className="font-medium">{prettifyNumber(views, true)}</span>
       </span>
     </span>
@@ -86,7 +89,7 @@ async function LastVisitorInfo() {
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
       <CursorClickIcon className="h-4 w-4" />
       <span>
-        最近访客来自&nbsp;
+        {siteContent.footer.lastVisitorLabel}&nbsp;
         {[lastVisitor.city, lastVisitor.country].filter(Boolean).join(', ')}
       </span>
       <span className="font-medium">{lastVisitor.flag}</span>
@@ -102,9 +105,10 @@ export function Footer() {
           <Container.Inner>
             <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
               <p className="text-sm text-zinc-500/80 dark:text-zinc-400/80">
-                &copy; {new Date().getFullYear()} KevinL 网站已开源：
-                <PeekabooLink href="https://github.com/ljnKevin/kevinl-blog">
-                  GitHub
+                &copy; {new Date().getFullYear()} {siteContent.identity.name}{' '}
+                {siteContent.footer.openSourcePrefix}
+                <PeekabooLink href={siteContent.identity.repositoryUrl}>
+                  {siteContent.footer.repositoryLabel}
                 </PeekabooLink>
               </p>
             </div>

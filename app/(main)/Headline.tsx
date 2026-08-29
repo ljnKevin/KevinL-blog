@@ -6,17 +6,20 @@ import Balancer from 'react-wrap-balancer'
 import { ExternalLinkIcon, SparkleIcon } from '~/assets'
 import { SocialLink } from '~/components/links/SocialLink'
 import { Button } from '~/components/ui/Button'
+import { siteContent } from '~/content/site-content'
 
-function ExplorationMark() {
+function ExplorationMark({ text }: { text: string }) {
   return (
     <span className="group inline-flex items-center">
       <SparkleIcon className="mr-1 inline-flex transform-gpu transition-transform duration-500 group-hover:rotate-180" />
-      <span>持续探索</span>
+      <span>{text}</span>
     </span>
   )
 }
 
 export function Headline() {
+  const { hero } = siteContent.home
+
   return (
     <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="max-w-3xl">
@@ -26,7 +29,7 @@ export function Headline() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 120 }}
         >
-          AI Application Developer
+          {hero.badge}
         </motion.p>
         <motion.h1
           className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-5xl"
@@ -39,7 +42,7 @@ export function Headline() {
             duration: 0.3,
           }}
         >
-          我是 KevinL，AI 应用开发者、产品型工程师。
+          {hero.title}
         </motion.h1>
         <motion.p
           className="mt-6 max-w-2xl text-base leading-8 text-zinc-600 dark:text-zinc-400"
@@ -53,11 +56,7 @@ export function Headline() {
             delay: 0.1,
           }}
         >
-          <Balancer>
-            热爱开发、设计、创新，享受生活，也长期在未知领域中探索。
-            我希望把技术实现、产品判断和内容表达结合起来，做真正能被人使用的 AI
-            应用。
-          </Balancer>
+          <Balancer>{hero.description}</Balancer>
         </motion.p>
         <motion.div
           className="mt-6 flex flex-wrap gap-2 text-sm font-medium text-zinc-600 dark:text-zinc-400"
@@ -70,13 +69,7 @@ export function Headline() {
             delay: 0.18,
           }}
         >
-          {[
-            'AI 应用开发',
-            '产品工程',
-            '前端与全栈',
-            '内容表达',
-            '长期跑步',
-          ].map((item) => (
+          {hero.tags.map((item) => (
             <span
               key={item}
               className="rounded-full border border-zinc-900/10 bg-white/70 px-3 py-1 dark:border-white/10 dark:bg-zinc-900/60"
@@ -96,15 +89,15 @@ export function Headline() {
             delay: 0.25,
           }}
         >
-          <Button href="/projects">查看项目</Button>
+          <Button href="/projects">{hero.actions.projects}</Button>
           <Button href="/about" variant="secondary">
-            了解我
+            {hero.actions.about}
           </Button>
           <a
-            href="mailto:kevinl.seegen@gmail.com"
+            href={`mailto:${siteContent.identity.email}`}
             className="inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-emerald-700 underline decoration-emerald-600/20 underline-offset-4 transition hover:decoration-emerald-600 dark:text-emerald-300"
           >
-            联系我
+            {hero.actions.contact}
             <ExternalLinkIcon className="h-4 w-4" />
           </a>
         </motion.div>
@@ -121,13 +114,13 @@ export function Headline() {
           }}
         >
           <SocialLink
-            href="https://github.com/ljnKevin"
-            aria-label="我的 GitHub"
+            href={siteContent.identity.githubProfileUrl}
+            aria-label={hero.socialLabels.github}
             platform="github"
           />
           <SocialLink
-            href="mailto:kevinl.seegen@gmail.com"
-            aria-label="我的邮箱"
+            href={`mailto:${siteContent.identity.email}`}
+            aria-label={hero.socialLabels.email}
             platform="mail"
           />
         </motion.div>
@@ -139,15 +132,10 @@ export function Headline() {
         transition={{ type: 'spring', damping: 25, stiffness: 110, delay: 0.2 }}
       >
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-500 dark:text-zinc-500">
-          Recruiter Snapshot
+          {hero.snapshot.eyebrow}
         </p>
         <dl className="mt-5 space-y-4">
-          {[
-            ['方向', 'AI 应用开发 / 产品型工程师'],
-            ['关注', '把想法做成可用产品'],
-            ['生活', '跑步、摄影与持续写作'],
-            ['联系', 'kevinl.seegen@gmail.com'],
-          ].map(([label, value]) => (
+          {hero.snapshot.rows.map(([label, value]) => (
             <div key={label}>
               <dt className="text-xs text-zinc-500 dark:text-zinc-500">
                 {label}
@@ -159,7 +147,7 @@ export function Headline() {
           ))}
         </dl>
         <div className="mt-6 border-t border-zinc-900/10 pt-5 text-sm font-medium text-emerald-700 dark:border-white/10 dark:text-emerald-300">
-          <ExplorationMark />
+          <ExplorationMark text={hero.snapshot.footer} />
         </div>
       </motion.aside>
     </div>

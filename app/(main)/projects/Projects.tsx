@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { ExternalLinkIcon } from '~/assets'
+import { siteContent } from '~/content/site-content'
 
 import { featuredProjects } from './project-data'
 
@@ -15,7 +16,7 @@ function ProjectDemoLink({ href }: { href: string }) {
         rel="noreferrer noopener"
         className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700 transition hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-50"
       >
-        访问作品
+        {siteContent.projects.labels.visit}
         <ExternalLinkIcon className="h-4 w-4" />
       </a>
     )
@@ -26,7 +27,7 @@ function ProjectDemoLink({ href }: { href: string }) {
       href={href}
       className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700 transition hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-50"
     >
-      访问作品
+      {siteContent.projects.labels.visit}
       <ExternalLinkIcon className="h-4 w-4" />
     </Link>
   )
@@ -75,7 +76,7 @@ export function Projects() {
                     rel="noreferrer noopener"
                     className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 transition hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200"
                   >
-                    GitHub
+                    {siteContent.projects.labels.github}
                     <ExternalLinkIcon className="h-4 w-4" />
                   </a>
                 ) : null}
@@ -85,7 +86,7 @@ export function Projects() {
 
             <div className="rounded-2xl border border-zinc-900/10 bg-zinc-50/80 p-5 dark:border-white/10 dark:bg-zinc-800/35">
               <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
-                项目亮点
+                {siteContent.projects.labels.highlights}
               </h3>
               <ul className="mt-4 space-y-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
                 {project.highlights.map((highlight) => (
