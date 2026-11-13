@@ -2,8 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-import { BlogPosts } from '~/app/(main)/blog/BlogPosts'
-import { Headline } from '~/app/(main)/Headline'
 import { featuredProjects } from '~/app/(main)/projects/project-data'
 import {
   ExternalLinkIcon,
@@ -21,6 +19,7 @@ import {
   spotifyPlaylistUrl,
 } from '~/config/profile'
 import { siteContent } from '~/content/site-content'
+import { getLatestBlogPosts } from '~/sanity/queries'
 
 const capabilityIcons = {
   lightning: LightningIcon,
@@ -60,13 +59,151 @@ function SectionHeading({
   )
 }
 
-export default function BlogHomePage() {
+export default async function BlogHomePage() {
   const { home } = siteContent
+  const [latest, ...recent] = (await getLatestBlogPosts({ limit: 4 })) ?? []
+  const formatDate = (date: string) =>
+    new Intl.DateTimeFormat('zh-CN', {
+      timeZone: 'Asia/Shanghai',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date(date))
 
   return (
     <>
       <Container className="mt-10">
-        <Headline />
+        <header className="flex flex-col justify-between gap-3 border-b border-zinc-200 pb-7 dark:border-zinc-800 sm:flex-row sm:items-center">
+          <h1 className="max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
+            我是{' '}
+            <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+              KevinL
+            </span>
+            ，从后端工程出发，持续探索产品与 AI。
+          </h1>
+          <Link
+            href="/about"
+            className="inline-flex min-h-10 w-fit flex-none items-center text-sm font-medium text-emerald-700 underline-offset-4 hover:underline focus-visible:outline-emerald-600 dark:text-emerald-300"
+          >
+            了解我 →
+          </Link>
+        </header>
+      </Container>
+
+      <Container className="mt-9 sm:mt-12">
+        {latest ? (
+          <section aria-labelledby="latest-thinking">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium">
+              <h2
+                id="latest-thinking"
+                className="text-emerald-700 dark:text-emerald-300"
+              >
+                最近，我在思考
+              </h2>
+              <time dateTime={latest.publishedAt} className="text-zinc-500">
+                {formatDate(latest.publishedAt)}
+              </time>
+              {latest.categories?.length ? (
+                <span className="text-zinc-500">
+                  {latest.categories.join(' · ')}
+                </span>
+              ) : null}
+            </div>
+            <Link
+              href={`/blog/${latest.slug}`}
+              className="group mt-5 grid items-center gap-7 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-8 dark:focus-visible:ring-offset-zinc-900 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-12"
+            >
+              <div className="min-w-0">
+                <h3 className="text-balance text-3xl font-bold leading-tight tracking-tight text-zinc-900 transition-colors group-hover:text-emerald-800 dark:text-zinc-50 dark:group-hover:text-emerald-200 sm:text-4xl sm:leading-tight lg:text-5xl lg:leading-tight">
+                  {latest.title}
+                </h3>
+                <p className="mt-5 max-w-2xl text-base leading-8 text-zinc-600 dark:text-zinc-400">
+                  {latest.description}
+                </p>
+                <span className="mt-5 inline-flex min-h-11 items-center gap-3 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                  读这篇思考{' '}
+                  <span
+                    aria-hidden="true"
+                    className="transition-transform group-hover:translate-x-1 motion-reduce:transform-none"
+                  >
+                    →
+                  </span>
+                </span>
+              </div>
+              {latest.mainImage?.asset?.url ? (
+                <div className="relative aspect-video overflow-hidden rounded-xl border border-zinc-900/10 bg-zinc-100 dark:border-white/10 dark:bg-zinc-800">
+                  <Image
+                    src={latest.mainImage.asset.url}
+                    alt=""
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 400px, (min-width: 768px) 700px, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+              ) : null}
+            </Link>
+          </section>
+        ) : (
+          <section>
+            <h2 className="text-2xl font-bold">
+              思考正在积累，记录会陆续写下。
+            </h2>
+            <Link
+              href="/projects"
+              className="mt-5 inline-flex min-h-11 items-center text-emerald-700 dark:text-emerald-300"
+            >
+              先看看我在做什么 →
+            </Link>
+          </section>
+        )}
+        {recent.length > 0 ? (
+          <section
+            aria-labelledby="recent-notes"
+            className="mt-10 border-t border-zinc-200 pt-7 dark:border-zinc-800 sm:mt-12"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <h2
+                id="recent-notes"
+                className="text-sm font-semibold text-zinc-700 dark:text-zinc-300"
+              >
+                之前的记录
+              </h2>
+              <Link
+                href="/blog"
+                className="inline-flex min-h-10 items-center text-sm text-emerald-700 hover:underline dark:text-emerald-300"
+              >
+                全部文章 →
+              </Link>
+            </div>
+            <ol className="mt-2 divide-y divide-zinc-200 dark:divide-zinc-800">
+              {recent.map((post) => (
+                <li key={post._id}>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="group flex flex-col gap-2 rounded py-4 focus-visible:outline-emerald-600 sm:flex-row sm:items-baseline sm:gap-6"
+                  >
+                    <time
+                      dateTime={post.publishedAt}
+                      className="flex-none text-xs tabular-nums text-zinc-500"
+                    >
+                      {formatDate(post.publishedAt)}
+                    </time>
+                    <h3 className="text-base font-medium leading-7 text-zinc-800 group-hover:text-emerald-700 dark:text-zinc-200 dark:group-hover:text-emerald-300">
+                      {post.title}
+                    </h3>
+                    <span
+                      aria-hidden="true"
+                      className="ml-auto hidden text-zinc-400 sm:block"
+                    >
+                      ↗
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
       </Container>
 
       <Container className="mt-20 sm:mt-24">
@@ -334,16 +471,7 @@ export default function BlogHomePage() {
       </Container>
 
       <Container className="mt-20 sm:mt-24">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <section>
-            <h2 className="flex items-center text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-              <PencilSwooshIcon className="h-5 w-5 flex-none" />
-              <span className="ml-2">{home.recentArticlesTitle}</span>
-            </h2>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              <BlogPosts limit={4} />
-            </div>
-          </section>
+        <div className="max-w-2xl">
           <aside className="h-fit rounded-3xl border border-zinc-900/10 bg-white/70 p-6 dark:border-white/10 dark:bg-zinc-900/50 lg:sticky lg:top-8">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700 dark:text-emerald-300">
               {home.beyondCode.eyebrow}
